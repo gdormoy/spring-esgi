@@ -1,8 +1,5 @@
-FROM maven: 3 - alpine
-RUN mkdir - p / usr / src / app
-WORKDIR / usr / src / app
-COPY. / usr / src / app
-RUN mvn clean package
-VOLUME["/kotlin-data"]
-EXPOSE 8082
-CMD[&quot;java&quot;, &quot;-jar&quot;, &quot;target/<name jar="" kotlin="" of="" your="">.jar&quot;]
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+ADD target/mgb-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
