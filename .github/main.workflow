@@ -23,7 +23,7 @@ action "Login to ECR" {
   needs = ["Maven build"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
-    AWS_DEFAULT_REGION = "us-west-3"
+    AWS_DEFAULT_REGION = "eu-west-3"
   }
   args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
 }
