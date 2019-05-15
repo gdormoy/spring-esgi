@@ -1,4 +1,4 @@
-workflow "New workflow" {
+workflow "Main workflow" {
   on = "push"
   resolves = [
     "Build Docker image",
@@ -7,25 +7,25 @@ workflow "New workflow" {
   ]
 }
 
-action "maven" {
-  uses = "maven"
+action "Maven build" {
+  uses = "LucaFeger/action-maven-cli@master"
   args = "clean install"
 }
 
 action "Build Docker image" {
-  uses = "actions/docker/cli@master"
+  uses = "actions/docker/login@master"
+  needs = ["Maven build"]
   args = ["build", "-t", "spring-esgi", "."]
-  needs = ["maven"]
 }
 
 action "Login to ECR" {
   uses = "actions/aws/cli@master"
+  needs = ["Maven build"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
     AWS_DEFAULT_REGION = "us-west-3"
   }
   args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
-  needs = ["maven"]
 }
 
 action "Tag image for ECR" {
@@ -40,13 +40,10 @@ action "Tag image for ECR" {
 
 action "Push image to ECR" {
   uses = "actions/docker/cli@master"
-  needs = [
-    "Login to ECR",
-    "Tag image for ECR",
-  ]
+  needs = ["Login to ECR", "Tag image for ECR"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
     IMAGE_NAME = "spring-esgi"
   }
-  args = ["$IMAGE_NAME", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
+  args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
 }
