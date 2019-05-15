@@ -15,7 +15,7 @@ action "Maven build" {
 action "Build Docker image" {
   uses = "actions/docker/login@master"
   needs = ["Maven build"]
-  args = ["build", "-t", "spring-esgi", "."]
+  args = ["build", "-t", "spring-esgi:latest", "."]
 }
 
 action "Login to ECR" {
