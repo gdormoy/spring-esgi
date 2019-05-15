@@ -1,6 +1,7 @@
 workflow "New workflow" {
   on = "push"
   resolves = [
+    "Build Docker image",
     "Login to ECR",
     "Push image to ECR",
   ]
