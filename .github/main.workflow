@@ -7,17 +7,20 @@ workflow "Main workflow" {
   ]
 }
 
+# Build
 action "Maven build" {
   uses = "LucaFeger/action-maven-cli@master"
   args = "clean install"
 }
 
+# Docker
 action "Build Docker image" {
   uses = "actions/docker/cli@master"
   needs = ["Maven build"]
   args = ["build", "-t", "spring-esgi:latest", "."]
 }
 
+# AWS
 action "Login to ECR" {
   uses = "actions/aws/cli@master"
   needs = ["Maven build"]
