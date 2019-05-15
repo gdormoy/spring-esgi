@@ -13,13 +13,13 @@ action "Maven build" {
 }
 
 action "Build Docker image" {
-  uses = "actions/docker/cli@latest"
+  uses = "actions/docker/cli@master"
   needs = ["Maven build"]
-  args = ["build", "-t", "spring-esgi", "."]
+  args = ["build", "-t", "spring-esgi:latest", "."]
 }
 
 action "Login to ECR" {
-  uses = "actions/aws/cli@latest"
+  uses = "actions/aws/cli@master"
   needs = ["Maven build"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
@@ -29,21 +29,21 @@ action "Login to ECR" {
 }
 
 action "Tag image for ECR" {
-  uses = "actions/docker/tag@latest"
+  uses = "actions/docker/tag@master"
   needs = ["Login to ECR", "Build Docker image"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
-    IMAGE_NAME = "spring-esgi"
+    IMAGE_NAME = "spring-esgi:latest"
   }
   args = ["$IMAGE_NAME", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
 }
 
 action "Push image to ECR" {
-  uses = "actions/docker/cli@latest"
+  uses = "actions/docker/cli@master"
   needs = ["Tag image for ECR"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
-    IMAGE_NAME = "spring-esgi"
+    IMAGE_NAME = "spring-esgi:latest"
   }
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
 }
