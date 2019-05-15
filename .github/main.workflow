@@ -31,7 +31,7 @@ action "Login to ECR" {
 action "Delete old ECR image" {
   uses = "actions/aws/cli@master"
   needs = ["Login to ECR"]
-  args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
+  args = "ecr batch-delete-image --repository-name 264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi --image-ids imageTag=latest | sh"
 }
 
 action "Tag image for ECR" {
