@@ -93,6 +93,7 @@ class MgbApplication(private val barDAO: BarDAO,
     }
 }
 
+// Simple user fixture for test : username spdeepak password spdeepak
 fun main(args: Array<String>) {
     runApplication<MgbApplication>(*args)
 }
