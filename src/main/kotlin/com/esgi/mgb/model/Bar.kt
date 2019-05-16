@@ -1,10 +1,11 @@
 package com.esgi.mgb.model
 
+import org.springframework.data.mongodb.core.mapping.Document
 import javax.persistence.*
 
-@Entity
-@Table(name = "bar")
-data class Bar(@Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long,
+
+@Document
+data class Bar(@Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: String,
                var name: String,
-               var addresse: String,
-               @ManyToOne var owner: Bar? = null)
+               var address: String,
+               var owner: User)
