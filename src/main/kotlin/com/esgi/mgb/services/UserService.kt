@@ -1,5 +1,7 @@
 package com.esgi.mgb.services
 
+import com.esgi.mgb.dao.BarDAO
+import com.esgi.mgb.dao.UserDAO
 import com.esgi.mgb.model.User
 import com.esgi.mgb.utils.BasicCrud
 import org.springframework.data.domain.Page

@@ -1,4 +1,4 @@
-package com.esgi.mgb.services
+package com.esgi.mgb.dao
 
 import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.User

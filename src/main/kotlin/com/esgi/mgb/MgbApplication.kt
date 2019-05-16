@@ -2,12 +2,11 @@ package com.esgi.mgb
 
 import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.User
-import com.esgi.mgb.services.BarDAO
-import com.esgi.mgb.services.UserDAO
+import com.esgi.mgb.dao.BarDAO
+import com.esgi.mgb.dao.UserDAO
 import com.esgi.mgb.utils.toLocalDate
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
-import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
