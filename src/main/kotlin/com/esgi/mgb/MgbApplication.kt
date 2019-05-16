@@ -8,7 +8,6 @@ import com.esgi.mgb.model.Product
 import com.esgi.mgb.model.User
 import com.esgi.mgb.utils.Location
 import com.esgi.mgb.utils.toLocalDate
-
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication

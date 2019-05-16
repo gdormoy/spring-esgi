@@ -24,11 +24,7 @@ open class CustomUserDetails : User, UserDetails {
     }
 
     override fun getPassword(): String {
-        return super.passWord!!
-    }
-
-    override fun getUsername(): String {
-        return super.userName!!
+        return super.password!!
     }
 
     override fun isEnabled(): Boolean {

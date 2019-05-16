@@ -4,7 +4,6 @@ import com.esgi.mgb.utils.Location
 import org.springframework.data.mongodb.core.mapping.Document
 import javax.persistence.*
 
-
 @Document
 data class Bar(@Id val id: String,
 			   var name: String,
