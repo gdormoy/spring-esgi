@@ -1,17 +1,17 @@
 package com.esgi.mgb.security
 
-import com.esgi.mgb.model.User
+import com.esgi.mgb.model.AbstractUser
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.stream.Collectors
 
-open class CustomUserDetails : User, UserDetails {
+open class CustomUserDetails : AbtractUser, UserDetails {
 
     private val log = LoggerFactory.getLogger(CustomUserDetails::class.java)
 
-    constructor(user: User) : super(user)
+    constructor(user: AbstractUser) : super(user)
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return roles

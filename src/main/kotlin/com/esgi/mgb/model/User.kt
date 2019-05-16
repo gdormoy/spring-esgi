@@ -7,19 +7,17 @@ import javax.validation.constraints.Email
 
 @Document(collection = "users")
 data class User(
-    @Id val id: String? = null,
+    @Id override val id: String? = null,
 
-    var firstname: String,
-    var lastname: String,
-
+    override var firstname: String,
+    override var lastname: String,
     @Email(regexp = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})")
-    var email: String,
-
-    var password: String,
-    var bars: List<Bar>? = mutableListOf(),
-    var roles: Set<Role> = HashSet(),
-    var accountNonExpired: Boolean = true,
-    var accountNonLocked: Boolean = true,
-    var credentialsNonExpired: Boolean = true,
-    var enabled: Boolean = true
-)
+    override var email: String,
+    override var password: String,
+    override var bars: List<Bar>? = mutableListOf(),
+    override var roles: Set<Role> = HashSet(),
+    override var accountNonExpired: Boolean = true,
+    override var accountNonLocked: Boolean = true,
+    override var credentialsNonExpired: Boolean = true,
+    override var enabled: Boolean = true
+): AbstractUser()

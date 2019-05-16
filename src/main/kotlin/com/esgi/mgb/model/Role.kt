@@ -8,6 +8,6 @@ import javax.persistence.Id
 
 @Document(collection = "roles")
 data class Role(
-    var rolename: String,
-    @Id val id: String? = null
-)
+    override var rolename: String,
+    @Id override val id: String? = null
+) : AbstractRole()
