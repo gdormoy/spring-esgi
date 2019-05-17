@@ -67,5 +67,8 @@ action "Run Codepipeline" {
   uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
+  env = {
+    AWS_DEFAULT_REGION = "eu-west-3"
+  }
   args = "codepipeline start-pipeline-execution --name spring-esgi"
 }
