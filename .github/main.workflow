@@ -62,7 +62,6 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
-# Restart EC2 instances
 action "Restart EC2" {
   uses = "actions/bin/sh@master"
   needs = ["Push image to ECR"]
@@ -70,5 +69,5 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "for id in $(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) ; do echo $id ; done"
+  args = "for id in "11 12 13" ; do echo $id ; done"
 }
