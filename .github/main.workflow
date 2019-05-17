@@ -37,10 +37,7 @@ action "Delete old ECR image" {
     "Login to ECR",
     "Build Docker image",
   ]
-  env = {
-    AWS_REPOSITORY_NAME = "spring-esgi"
-  }
-  args = "ecr batch-delete-image --repository-name $AWS_DEFAULT_REGION --image-ids imageTag=latest | sh"
+  args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
 }
 
 action "Tag image for ECR" {
