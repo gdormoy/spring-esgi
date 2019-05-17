@@ -62,6 +62,7 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
+#run pipeline aws
 action "Run Codepipeline" {
   uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
