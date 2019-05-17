@@ -62,6 +62,7 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
+# loop
 action "Restart EC2" {
   uses = "actions/bin/sh@master"
   needs = ["Push image to ECR"]
