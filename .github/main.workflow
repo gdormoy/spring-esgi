@@ -3,7 +3,7 @@ workflow "Main workflow" {
   resolves = [
     "Build Docker image",
     "Delete old ECR image",
-    "Run Codepipeline",
+    "Restart EC2",
   ]
 }
 
@@ -63,12 +63,12 @@ action "Push image to ECR" {
 }
 
 #run pipeline aws
-action "Run Codepipeline" {
-  uses = "actions/aws/cli@master"
+action "Restart EC2" {
+  uses = "actions/bin/sh@master"
   needs = ["Push image to ECR"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api"
+  args = "while read line; do aws ec2 stop-instances --instance-ids $(echo $line | cut -d '\"' -f2) ; done <<< $(aws ec2 describe-instances --query \"Reservations[].Instances[].InstanceId\")"
 }
