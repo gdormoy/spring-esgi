@@ -70,5 +70,5 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "for i in $(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) ; do $(aws ec2 stop-instances --instance-ids $i) ; done"
+  args = "for id in $(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) ; do echo $id ; done"
 }
