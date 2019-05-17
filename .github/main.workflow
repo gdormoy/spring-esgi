@@ -33,7 +33,10 @@ action "Login to ECR" {
 
 action "Delete old ECR image" {
   uses = "actions/aws/cli@master"
-  needs = ["Login to ECR"]
+  needs = [
+    "Login to ECR",
+    "Build Docker image",
+  ]
   env = {
     AWS_REPOSITORY_NAME = "spring-esgi"
     VERSION = "latest"
