@@ -70,5 +70,5 @@ action "Run Codepipeline" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "ecs update-service --force-new-deployment --service spring-api"
+  args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api"
 }
