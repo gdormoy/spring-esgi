@@ -2,8 +2,8 @@ workflow "Main workflow" {
   on = "push"
   resolves = [
     "Build Docker image",
-    "Push image to ECR",
     "Delete old ECR image",
+    "Restart EC2"
   ]
 }
 
@@ -33,17 +33,16 @@ action "Login to ECR" {
 
 action "Delete old ECR image" {
   uses = "actions/aws/cli@master"
-  needs = ["Login to ECR"]
-  env = {
-    AWS_REPOSITORY_NAME = "spring-esgi"
-    VERSION = "latest"
-  }
-  args = "ecr batch-delete-image --repository-name $AWS_DEFAULT_REGION --image-ids imageTag=$VERSION | sh"
+  needs = [
+    "Login to ECR",
+    "Build Docker image",
+  ]
+  args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
 }
 
 action "Tag image for ECR" {
   uses = "actions/docker/tag@master"
-  needs = ["Build Docker image", "Delete old ECR image"]
+  needs = ["Delete old ECR image"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
     IMAGE_NAME = "spring-esgi"
@@ -55,7 +54,6 @@ action "Push image to ECR" {
   uses = "actions/docker/cli@master"
   needs = [
     "Tag image for ECR",
-    "Delete old ECR image",
   ]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
@@ -64,3 +62,12 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
+action "Restart EC2" {
+  uses = "actions/bin/sh@master"
+  needs = ["Push image to ECR"]
+  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
+  env = {
+    AWS_DEFAULT_REGION = "eu-west-3"
+  }
+  args = "for id in '11' '12' '13' ; do echo $id ; done"
+}
