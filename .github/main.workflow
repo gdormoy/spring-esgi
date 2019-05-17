@@ -68,11 +68,12 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "export TEST_VAR=toto"
+  args = "export TEST_VAR=$(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) \
+          echo $TEST_VAR"
 }
 
-action "Print var" {
-  uses = "actions/bin/sh@master"
-  needs = ["Restart EC2"]
-  args = "echo $TEST_VAR"
-}
+# action "Print var" {
+#   uses = "actions/bin/sh@master"
+#   needs = ["Restart EC2"]
+#   args = "echo $TEST_VAR"
+# }
