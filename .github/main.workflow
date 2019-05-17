@@ -70,5 +70,5 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "while read line; do aws ec2 stop-instances --instance-ids $(echo $line | cut -d '\"' -f2) ; done <<< $(aws ec2 describe-instances --query \"Reservations[].Instances[].InstanceId\")"
+  args = "while read line; do aws ec2 stop-instances --instance-ids $(echo ${line:1:-2}) ; done <<< $(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId)"
 }
