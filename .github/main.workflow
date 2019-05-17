@@ -68,7 +68,7 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "TEST_VAR=$(ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) | echo $TEST_VAR"
+  args = "ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text"
 }
 
 action "Print var" {
