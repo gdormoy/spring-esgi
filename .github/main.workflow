@@ -3,7 +3,7 @@ workflow "Main workflow" {
   resolves = [
     "Build Docker image",
     "Delete old ECR image",
-    "Restart EC2"
+    "Print var",
   ]
 }
 
@@ -70,5 +70,11 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "echo $IMAGE_NAME"
+  args = "export TEST_VAR=toto"
+}
+
+action "Print var" {
+  uses = "actions/bin/sh@master"
+  needs = ["Restart EC2"]
+  args = "echo $$TEST_VAR"
 }
