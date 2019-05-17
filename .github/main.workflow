@@ -3,6 +3,7 @@ workflow "Main workflow" {
   resolves = [
     "Build Docker image",
     "Delete old ECR image",
+    "Restart EC2"
   ]
 }
 
@@ -59,4 +60,15 @@ action "Push image to ECR" {
     IMAGE_NAME = "spring-esgi"
   }
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
+}
+
+# Restart EC2 instances
+action "Restart EC2" {
+  uses = "actions/bin/sh@master"
+  needs = ["Push image to ECR"]
+  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
+  env = {
+    AWS_DEFAULT_REGION = "eu-west-3"
+  }
+  args = "for i in $(aws ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text) ; do $(aws ec2 stop-instances --instance-ids $i) ; done"
 }
