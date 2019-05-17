@@ -65,7 +65,7 @@ action "Push image to ECR" {
 }
 
 action "Run Codepipeline" {
-  uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
+  uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
   args = "start-pipeline-execution --name spring-esgi"
 }
