@@ -76,5 +76,5 @@ action "Restart EC2" {
 action "Print var" {
   uses = "actions/bin/sh@master"
   needs = ["Restart EC2"]
-  args = "echo $$TEST_VAR"
+  args = "echo $TEST_VAR"
 }
