@@ -2,8 +2,8 @@ workflow "Main workflow" {
   on = "push"
   resolves = [
     "Build Docker image",
-    "Push image to ECR",
     "Delete old ECR image",
+    "Run Codepipeline",
   ]
 }
 
@@ -64,3 +64,8 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
+action "Run Codepipeline" {
+  uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
+  needs = ["Push image to ECR"]
+  args = "start-pipeline-execution --name spring-esgi"
+}
