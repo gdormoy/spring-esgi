@@ -70,5 +70,5 @@ action "Restart EC2" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "for id in '11' '12' '13' ; do echo $id ; done"
+  args = "echo $IMAGE_NAME"
 }
