@@ -73,5 +73,5 @@ action "GitHub Action for AWS" {
     AWS_SERVICE_NAME = "spring-api"
     VERSION = "latest"
   }
-  args = "ecs-deploy -c $AWS_CLUSTER_NAME -n $AWS_SERVICE_NAME -i $AWS_REPOSITORY_URL:$VERSION | sh"
+  args = "ecs deploy -c $AWS_CLUSTER_NAME -n $AWS_SERVICE_NAME -i $AWS_REPOSITORY_URL:$VERSION | sh"
 }
