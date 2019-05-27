@@ -3,6 +3,8 @@ workflow "Main workflow" {
   resolves = [
     "Build Docker image",
     "Delete old ECR image",
+    "Tag image for ECR",
+    "Push image to ECR",
   ]
 }
 
@@ -32,7 +34,10 @@ action "Login to ECR" {
 
 action "Delete old ECR image" {
   uses = "actions/aws/cli@master"
-  needs = ["Login to ECR"]
+  needs = [
+    "Login to ECR",
+    "Build Docker image",
+  ]
   env = {
     AWS_REPOSITORY_NAME = "spring-esgi"
     VERSION = "latest"
