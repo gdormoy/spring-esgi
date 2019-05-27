@@ -3,7 +3,6 @@ workflow "Main workflow" {
   resolves = [
     "Build Docker image",
     "Delete old ECR image",
-    "GitHub Action for AWS",
   ]
 }
 
@@ -64,14 +63,14 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
-action "GitHub Action for AWS" {
-  uses = "actions/aws/cli@master"
-  needs = ["Push image to ECR"]
-  env = {
-    AWS_CLUSTER_NAME = "spring-project"
-    AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
-    AWS_SERVICE_NAME = "spring-api"
-    VERSION = "latest"
-  }
-  args = "ecs deploy -c $AWS_CLUSTER_NAME -n $AWS_SERVICE_NAME -i $AWS_REPOSITORY_URL:$VERSION | sh"
-}
+# action "AWS DEPLOY SERVICE" {
+#   uses = "actions/aws/cli@master"
+#   needs = ["Push image to ECR"]
+#   env = {
+#     AWS_CLUSTER_NAME = "spring-project"
+#     AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
+#     AWS_SERVICE_NAME = "spring-api"
+#     VERSION = "latest"
+#   }
+#   args = "ecs deploy -c $AWS_CLUSTER_NAME -n $AWS_SERVICE_NAME -i $AWS_REPOSITORY_URL:$VERSION | sh"
+# }
