@@ -4,7 +4,7 @@ workflow "Main workflow" {
     "Maven build",
     "Build Docker image",
     "Login to ECR",
-    "Delete old ECR image",
+#     "Delete old ECR image",
     "Tag image for ECR",
     "Push image to ECR",
     "AWS DEPLOY SERVICE",
@@ -32,21 +32,21 @@ action "Login to ECR" {
   args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
 }
 
-action "Delete old ECR image" {
-  uses = "actions/aws/cli@master"
-  needs = [
-    "Login to ECR",
-    "Build Docker image",
-  ]
-  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"]
-  args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
-}
+# action "Delete old ECR image" {
+#   uses = "actions/aws/cli@master"
+#   needs = [
+#     "Login to ECR",
+#     "Build Docker image",
+#   ]
+#   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"]
+#   args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
+# }
 
 action "Tag image for ECR" {
   uses = "actions/docker/tag@master"
   needs = [
     "Build Docker image",
-    "Delete old ECR image"
+#     "Delete old ECR image"
     ]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
@@ -59,7 +59,7 @@ action "Push image to ECR" {
   uses = "actions/docker/cli@master"
   needs = [
     "Tag image for ECR",
-    "Delete old ECR image",
+#     "Delete old ECR image",
   ]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
