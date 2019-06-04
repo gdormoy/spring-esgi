@@ -30,7 +30,7 @@ action "Login to ECR" {
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
+  args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION"
 }
 
 action "Delete old ECR image" {
@@ -43,7 +43,7 @@ action "Delete old ECR image" {
     AWS_REPOSITORY_NAME = "spring-esgi"
     VERSION = "latest"
   }
-  args = "ecr batch-delete-image --repository-name $AWS_REPOSITORY_NAME --image-ids imageTag=$VERSION | sh"
+  args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest"
 }
 
 action "Tag image for ECR" {
@@ -72,6 +72,7 @@ action "Push image to ECR" {
 action "AWS DEPLOY SERVICE" {
   uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
+  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
     AWS_CLUSTER_NAME = "spring-project"
     AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
