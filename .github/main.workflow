@@ -1,78 +1,82 @@
 workflow "Main workflow" {
   on = "push"
   resolves = [
-    "Print var",
+    "Build Docker image",
+    "Delete old ECR image",
+    "Tag image for ECR",
+    "Push image to ECR",
+    "AWS DEPLOY SERVICE",
   ]
 }
 
 # Build
-# action "Maven build" {
-#   uses = "LucaFeger/action-maven-cli@master"
-#   args = "clean install"
-# }
+action "Maven build" {
+  uses = "LucaFeger/action-maven-cli@master"
+  args = "clean install"
+}
 
-# # Docker
-# action "Build Docker image" {
-#   uses = "actions/docker/cli@master"
-#   needs = ["Maven build"]
-#   args = ["build", "-t", "spring-esgi:latest", "."]
-# }
+# Docker
+action "Build Docker image" {
+  uses = "actions/docker/cli@master"
+  needs = ["Maven build"]
+  args = ["build", "-t", "spring-esgi:latest", "."]
+}
 
-# # AWS
-# action "Login to ECR" {
-#   uses = "actions/aws/cli@master"
-#   needs = ["Maven build"]
-#   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-#   env = {
-#     AWS_DEFAULT_REGION = "eu-west-3"
-#   }
-#   args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
-# }
-
-# action "Delete old ECR image" {
-#   uses = "actions/aws/cli@master"
-#   needs = [
-#     "Login to ECR",
-#     "Build Docker image",
-#   ]
-#   args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
-# }
-
-# action "Tag image for ECR" {
-#   uses = "actions/docker/tag@master"
-#   needs = ["Delete old ECR image"]
-#   env = {
-#     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
-#     IMAGE_NAME = "spring-esgi"
-#   }
-#   args = ["$IMAGE_NAME:latest", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
-# }
-
-# action "Push image to ECR" {
-#   uses = "actions/docker/cli@master"
-#   needs = [
-#     "Tag image for ECR",
-#   ]
-#   env = {
-#     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
-#     IMAGE_NAME = "spring-esgi"
-#   }
-#   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
-# }
-
-# loop
-action "Restart EC2" {
+# AWS
+action "Login to ECR" {
   uses = "actions/aws/cli@master"
-#   needs = ["Push image to ECR"]
+  needs = ["Maven build"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
     AWS_DEFAULT_REGION = "eu-west-3"
   }
-  args = "test=`ec2 describe-instances --query Reservations[].Instances[].InstanceId --output text`"
+  args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
 }
 
-action "Print var" {
-  uses = "actions/bin/sh@master"
-  needs = ["Restart EC2"]
-  args = "echo $TEST_VAR"
+action "Delete old ECR image" {
+  uses = "actions/aws/cli@master"
+  needs = [
+    "Login to ECR",
+    "Build Docker image",
+  ]
+  env = {
+    AWS_REPOSITORY_NAME = "spring-esgi"
+    VERSION = "latest"
+  }
+  args = "ecr batch-delete-image --repository-name $AWS_REPOSITORY_NAME --image-ids imageTag=$VERSION | sh"
+}
+
+action "Tag image for ECR" {
+  uses = "actions/docker/tag@master"
+  needs = ["Build Docker image", "Delete old ECR image"]
+  env = {
+    CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
+    IMAGE_NAME = "spring-esgi"
+  }
+  args = ["$IMAGE_NAME:latest", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME"]
+}
+
+action "Push image to ECR" {
+  uses = "actions/docker/cli@master"
+  needs = [
+    "Tag image for ECR",
+    "Delete old ECR image",
+  ]
+  env = {
+    CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
+    IMAGE_NAME = "spring-esgi"
+  }
+  args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
+}
+
+action "AWS DEPLOY SERVICE" {
+  uses = "actions/aws/cli@master"
+  needs = ["Push image to ECR"]
+  env = {
+    AWS_CLUSTER_NAME = "spring-project"
+    AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
+    AWS_SERVICE_NAME = "spring-api"
+    VERSION = "latest"
+  }
+  args = "ecs update-service --force-new-deployment --cluster $AWS_CLUSTER_NAME --service $AWS_SERVICE_NAME"
 }
