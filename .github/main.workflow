@@ -26,10 +26,7 @@ action "Build Docker image" {
 action "Login to ECR" {
   uses = "actions/aws/cli@master"
   needs = ["Maven build"]
-  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-  env = {
-    AWS_DEFAULT_REGION = "eu-west-3"
-  }
+  secrets = ["AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID", "AWS_DEFAULT_REGION"]
   args = "ecr get-login --no-include-email --region $AWS_DEFAULT_REGION | sh"
 }
 
@@ -39,11 +36,7 @@ action "Delete old ECR image" {
     "Login to ECR",
     "Build Docker image",
   ]
-  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-  env = {
-    AWS_REPOSITORY_NAME = "spring-esgi"
-    VERSION = "latest"
-  }
+  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"]
   args = "ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest | sh"
 }
 
@@ -73,12 +66,6 @@ action "Push image to ECR" {
 action "AWS DEPLOY SERVICE" {
   uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
-  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-  env = {
-    AWS_CLUSTER_NAME = "spring-project"
-    AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
-    AWS_SERVICE_NAME = "spring-api"
-    VERSION = "latest"
-  }
+  secrets = ["AWS_DEFAULT_REGION", "AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID"]
   args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api | sh"
 }
