@@ -49,6 +49,7 @@ action "Tag image for ECR" {
     "Login to ECR",
 #     "Delete old ECR image"
     ]
+  secrets = ["AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID", "AWS_DEFAULT_REGION"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
     IMAGE_NAME = "spring-esgi"
@@ -62,6 +63,7 @@ action "Push image to ECR" {
     "Tag image for ECR",
 #     "Delete old ECR image",
   ]
+  secrets = ["AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID", "AWS_DEFAULT_REGION"]
   env = {
     CONTAINER_REGISTRY_PATH = "264868257155.dkr.ecr.eu-west-3.amazonaws.com"
     IMAGE_NAME = "spring-esgi"
