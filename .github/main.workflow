@@ -80,5 +80,5 @@ action "AWS DEPLOY SERVICE" {
     AWS_SERVICE_NAME = "spring-api"
     VERSION = "latest"
   }
-  args = "ecs update-service --force-new-deployment --cluster $AWS_CLUSTER_NAME --service $AWS_SERVICE_NAME | sh"
+  args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api | sh"
 }
