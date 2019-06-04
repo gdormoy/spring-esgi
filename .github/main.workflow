@@ -4,7 +4,7 @@ workflow "Main workflow" {
     "Maven build",
     "Build Docker image",
     "Login to ECR",
-#     "Delete old ECR image",
+    "Delete old ECR image",
     "Tag image for ECR",
     "Push image to ECR",
     "AWS DEPLOY SERVICE",
@@ -46,6 +46,7 @@ action "Tag image for ECR" {
   uses = "actions/docker/tag@master"
   needs = [
     "Build Docker image",
+    "Login to ECR",
 #     "Delete old ECR image"
     ]
   env = {
