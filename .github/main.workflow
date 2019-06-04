@@ -72,5 +72,5 @@ action "AWS DEPLOY SERVICE" {
   uses = "actions/aws/cli@master"
   needs = ["Push image to ECR"]
   secrets = ["AWS_DEFAULT_REGION", "AWS_SECRET_ACCESS_KEY", "AWS_ACCESS_KEY_ID"]
-  args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api | sh"
+  args = "ecs update-service --force-new-deployment --cluster spring-project --service spring-api"
 }
