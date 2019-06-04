@@ -1,7 +1,9 @@
 workflow "Main workflow" {
   on = "push"
   resolves = [
+    "Maven build",
     "Build Docker image",
+    "Login to ECR",
 #     "Delete old ECR image",
     "Tag image for ECR",
     "Push image to ECR",
