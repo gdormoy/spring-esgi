@@ -39,6 +39,7 @@ action "Delete old ECR image" {
     "Login to ECR",
     "Build Docker image",
   ]
+  secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
   env = {
     AWS_REPOSITORY_NAME = "spring-esgi"
     VERSION = "latest"
