@@ -1,0 +1,23 @@
+language: java
+jdk:
+  - oraclejdk12
+services:
+  - docker
+env:
+  global:
+  - secure: travisEncryptedAWS_ACCOUNT_ID
+  - secure: travisEncryptedAWS_DEFAULT_REGION
+  - secure: travisEncryptedAWS_ACCESS_KEY_ID
+  - secure: travisEncryptedAWS_SECRET_ACCESS_KEY
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+before_script:
+  - aws s3 cp s3://spring-esgi-project/application.properties ./src/main/resources/application.properties
+script:
+  - eval $(aws ecr get-login --region eu-west-3 --no-include-email)
+  - aws ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest
+  - docker build -t spring-esgi:latest .
+  - docker tag spring-esgi:latest 264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi:latest
+  - docker push 264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi:latest
+  - aws ecs update-service --force-new-deployment --cluster spring-project --service spring-api
