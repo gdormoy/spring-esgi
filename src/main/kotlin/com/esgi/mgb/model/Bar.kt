@@ -5,7 +5,8 @@ import javax.persistence.*
 
 
 @Document
-data class Bar(@Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: String,
+data class Bar(@Id val id: String,
                var name: String,
                var address: String,
-               var owner: User)
+               var ownerId : List<String>,
+               var product: List<Product>)
