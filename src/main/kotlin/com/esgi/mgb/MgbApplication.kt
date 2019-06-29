@@ -4,6 +4,7 @@ import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.User
 import com.esgi.mgb.dao.BarDAO
 import com.esgi.mgb.dao.UserDAO
+import com.esgi.mgb.utils.Location
 import com.esgi.mgb.utils.toLocalDate
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -19,22 +20,35 @@ class MgbApplication(private val barDAO: BarDAO, private val userDAO: UserDAO) :
 
     private fun createBar() {
         this.cleanCollections()
-        val toto = userDAO.insert(User(id = "0",
-                pseudo = "Toto",
-                email = "toto@gmail.com",
-                password = "",
-                birthDate = "20-09-1997".toLocalDate()))
-        val tata = userDAO.insert(User(id = "1",
-                pseudo = "Tata",
-                email = "tata@gmail.com",
-                password = "",
-                birthDate = "03-01-1980".toLocalDate()))
 
-        val books = listOf(
-                Bar(id = "0", name = "Les Rattrapages", address = "Jussieu", owner = toto),
-                Bar(id = "1", name = "Nouvel institue", address = "Jussieu", owner = tata)
-        )
-        barDAO.insert(books)
+        val bars = listOf(
+                Bar(id = "0",
+                        name = "Les Rattrapages BIS",
+                        address = "14 rue des fosses saint Bernard Paris",
+                        listOwnerId = mutableListOf("0"),
+                        location = Location(latitude = 48.8487364, longitude = 2.355045)),
+                Bar(id = "1",
+                        name = "Nouvel institue",
+                        address = "34 Rue de Clignancourt, Paris 18e Arrondissement, Île-de-France, France",
+                        listOwnerId = mutableListOf("1"),
+                        location = Location(latitude = 48.8863, longitude = 2.3476100000000315)),
+                )
+        barDAO.insert(bars)
+
+        val lesRattrapages = userDAO.insert(User(id = "0",
+                name = "unknow",
+                pseudo = "unknow",
+                email = "unknow@gmail.com",
+                password = "",
+                birthDate = "20-09-1997".toLocalDate(),
+                listBar = mutableListOf(bars[0])))
+        val amedeEscale = userDAO.insert(User(id = "1",
+                name = "Amédé",
+                pseudo = "Amédé",
+                email = "amede@gmail.com",
+                password = "",
+                birthDate = "03-01-1980".toLocalDate(),
+                listBar = mutableListOf(bars[1])))
     }
 
     private fun cleanCollections() {

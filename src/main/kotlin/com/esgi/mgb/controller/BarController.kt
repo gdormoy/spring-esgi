@@ -33,5 +33,5 @@ class BarController(private val barService: BarService) {
 
 
     @DeleteMapping("{id}")
-    fun deleteByIsbn(@PathVariable id: String): Optional<Bar> = barService.deleteById(id)
+    fun deleteById(@PathVariable id: String): Optional<Bar> = barService.deleteById(id)
 }

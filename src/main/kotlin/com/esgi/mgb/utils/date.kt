@@ -5,4 +5,4 @@ import java.time.format.DateTimeFormatter
 
 fun dateFormat(): DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
-fun String.toLocalDate() = LocalDate.parse(this, dateFormat())
+fun String.toLocalDate(): LocalDate = LocalDate.parse(this, dateFormat())
