@@ -31,7 +31,7 @@ class MgbApplication(private val barDAO: BarDAO, private val userDAO: UserDAO) :
                         name = "Nouvel institue",
                         address = "34 Rue de Clignancourt, Paris 18e Arrondissement, Île-de-France, France",
                         listOwnerId = mutableListOf("1"),
-                        location = Location(latitude = 48.8863, longitude = 2.3476100000000315)),
+						location = Location(latitude = 48.8863, longitude = 2.3476100000000315))
                 )
         barDAO.insert(bars)
 
