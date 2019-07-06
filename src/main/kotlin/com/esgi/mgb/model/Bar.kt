@@ -11,4 +11,4 @@ data class Bar(@Id val id: String,
 			   var address: String,
 			   var location: Location,
 			   var listOwnerId: MutableList<String>,
-			   var listProduct: MutableList<Product>? = mutableListOf())
+			   var listProduct: MutableList<Product> = mutableListOf())

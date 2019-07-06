@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface ProductDAO : MongoRepository<Product, String> {
 
-	fun findByListBarId(id: String): List<Product>
+	fun findByBarId(id: String): List<Product>
 	fun findByNameRegex(name: String): List<Product>
 }

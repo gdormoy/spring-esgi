@@ -10,5 +10,5 @@ data class Product(@Id val id: String,
 				   var name: String,
 				   var price: Double,
 				   var soft: Boolean,
-				   var listBarId: MutableList<String>,
+				   var barId: String,
 				   var listPromotion: MutableList<Promotion>? = null)
