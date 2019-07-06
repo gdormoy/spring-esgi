@@ -37,9 +37,9 @@ class BarService(val barDAO: BarDAO, private val productDAO: ProductDAO) : Basic
 
 	private fun insertBarAndReInsertItProduct(bar: Bar): Bar {
 		return barDAO.insert(bar.apply {
-			(productDAO.findByListBarId(bar.id).forEach {
+			(productDAO.findByBarId(bar.id).forEach {
 				if (this.listProduct == null) this.listProduct = mutableListOf()
-				this.listProduct?.add(it)
+				this.listProduct.add(it)
 			})
 		})
     }
