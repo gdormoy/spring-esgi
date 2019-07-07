@@ -6,13 +6,14 @@ import com.esgi.mgb.dao.UserDAO
 import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.Product
 import com.esgi.mgb.model.User
-import com.esgi.mgb.utils.Location
 import com.esgi.mgb.utils.toLocalDate
 
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.data.geo.Circle
+import org.springframework.data.geo.Point
 
 @SpringBootApplication
 class MgbApplication(private val barDAO: BarDAO,
@@ -52,13 +53,13 @@ class MgbApplication(private val barDAO: BarDAO,
                         name = "Les Rattrapages",
                         address = "14 rue des fosses saint Bernard Paris",
                         listOwnerId = mutableListOf("0"),
-                        location = Location(latitude = 48.8487364, longitude = 2.355045),
+                        location = Point(48.8487364, 2.355045),
                         listProduct = mutableListOf(product[0])),
                 Bar(id = "1",
                         name = "L'Escale",
                         address = "34 Rue de Clignancourt, Paris 18e Arrondissement, Île-de-France, France",
                         listOwnerId = mutableListOf("1"),
-                        location = Location(latitude = 48.8863, longitude = 2.3476100000000315),
+                        location = Point(48.8863, 2.3476100000000315),
                         listProduct = mutableListOf(product[1]))
                 )
         barDAO.insert(bars)
@@ -84,6 +85,8 @@ class MgbApplication(private val barDAO: BarDAO,
                 email = "réré77890@gmail.com",
                 password = "",
                 birthDate = "20-09-1947".toLocalDate()))
+
+//        bars[1].location.isInRangeOf(Circle(bars[0].location.coordinates, 1000.0))
     }
 
     private fun cleanCollections() {
