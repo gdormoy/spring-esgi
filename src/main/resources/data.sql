@@ -1,1 +1,0 @@
-INSERT INTO user (id, first_name, last_name, pass_word, user_name, version, email, account_non_expired, account_non_locked, credentials_non_expired, enabled) VALUES (1, 'deepak', 'sp', '$2a$10$2nU5xMCyzPMeNiGQsrjzQeWNcHf9NjtGzVFgy6kVRcZlLh/ABTgZW', 'spdeepak', 1, 'example@example.com', true, true, true, true);
