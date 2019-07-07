@@ -6,5 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface PromotionDAO : MongoRepository<Promotion, String> {
 	fun findByListProductId(id: String): List<Promotion>
-	fun findByNameRegex(name: String): List<Promotion>
 }

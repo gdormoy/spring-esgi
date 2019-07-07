@@ -1,6 +1,7 @@
 package com.esgi.mgb.model
 
-import com.esgi.mgb.utils.Location
+
+import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.mapping.Document
 import javax.persistence.*
 
@@ -9,6 +10,6 @@ import javax.persistence.*
 data class Bar(@Id val id: String,
 			   var name: String,
 			   var address: String,
-			   var location: Location,
+			   var location: Point,
 			   var listOwnerId: MutableList<String>,
 			   var listProduct: MutableList<Product> = mutableListOf())
