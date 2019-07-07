@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 
 interface UserDAO : MongoRepository<User, String> {
-	fun findByListBar(product: List<Bar>): List<User>
+	fun findOneByUserName(userName: String): User
 }
