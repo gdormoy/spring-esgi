@@ -2,6 +2,7 @@ package com.esgi.mgb
 
 import com.esgi.mgb.dao.BarDAO
 import com.esgi.mgb.dao.ProductDAO
+import com.esgi.mgb.dao.RoleDAO
 import com.esgi.mgb.dao.UserDAO
 import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.Product
@@ -16,7 +17,8 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class MgbApplication(private val barDAO: BarDAO,
                      private val userDAO: UserDAO,
-                     private val productDAO: ProductDAO)
+                     private val productDAO: ProductDAO,
+                     private val roleDAO: RoleDAO)
     : ApplicationRunner {
     /* This will run after springboot full load*/
     override fun run(args: ApplicationArguments?) {
@@ -62,26 +64,30 @@ class MgbApplication(private val barDAO: BarDAO,
                 )
         barDAO.insert(bars)
 
+        // password for testing = spdeepak
         val lesRattrapages = userDAO.insert(User(id = "0",
-                name = "unknow",
-                pseudo = "Sharko",
+                firstname = "unknow",
+                lastname = "rattrape",
+                userName = "Sharko",
                 email = "unknow@gmail.com",
-                password = "",
+                passWord = "\$2a\$10\$2nU5xMCyzPMeNiGQsrjzQeWNcHf9NjtGzVFgy6kVRcZlLh/ABTgZW",
                 birthDate = "20-09-1997".toLocalDate(),
                 listBar = mutableListOf(bars[0])))
         val amedeEscale = userDAO.insert(User(id = "1",
-                name = "Amédé",
-                pseudo = "Amédé",
+                firstname =  "Amédé",
+                lastname = "Escale",
+                userName = "Amédé",
                 email = "amede@gmail.com",
-                password = "",
+                passWord = "test",
                 birthDate = "03-01-1980".toLocalDate(),
                 listBar = mutableListOf(bars[1])))
 
         userDAO.insert(User(id = "2",
-                name = "René",
-                pseudo = "Gros Réré",
+                firstname = "René",
+                lastname = "whocare",
+                userName = "Gros Réré",
                 email = "réré77890@gmail.com",
-                password = "",
+                passWord = "test",
                 birthDate = "20-09-1947".toLocalDate()))
     }
 
@@ -89,6 +95,7 @@ class MgbApplication(private val barDAO: BarDAO,
         userDAO.deleteAll()
         barDAO.deleteAll()
         productDAO.deleteAll()
+        roleDAO.deleteAll()
     }
 }
 
