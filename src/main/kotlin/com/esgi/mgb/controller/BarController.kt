@@ -45,12 +45,11 @@ class BarController(private val barService: BarService, private val productServi
 	fun getByProximityAndProducts(@PathVariable lat: Double, @PathVariable lng: Double,
 								  @PathVariable maxRangeMeters: Int,
 								  @PathVariable namesProducts: List<String>): List<Bar> {
-		val listBar = getByProximity(lat, lng, maxRangeMeters)
-		listBar.filter {
+
+		return getByProximity(lat, lng, maxRangeMeters).filter {
 			val listProduct = it.listProduct.filter { namesProducts.contains(it.name) }
 			listProduct.size == namesProducts.size
 		}
-		return listBar
 	}
 
     @PostMapping
