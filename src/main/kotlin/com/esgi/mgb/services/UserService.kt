@@ -22,7 +22,7 @@ class UserService(private val userDAO: UserDAO, private val barDAO: BarDAO) : Ba
 
     @Throws(Exception::class)
     override fun update(obj: User): User {
-        return if (userDAO.existsById(obj.id)) { //check if user exists because the save method will insert a record if does not exists
+		return if (userDAO.existsById(obj.id)) {
 			userDAO.save(insertUserAndReInsertItBar(obj))
         } else {
 			throw object : NotFoundException("${User::class}: $obj not found") {}
