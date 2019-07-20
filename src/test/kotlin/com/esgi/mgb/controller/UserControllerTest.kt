@@ -18,15 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.data.domain.PageImpl
-import org.springframework.test.web.client.match.MockRestRequestMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDate
-import java.util.ArrayList
-
-
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(UserController::class)
@@ -57,8 +51,6 @@ internal class UserControllerTest {
 
     @Test
     fun `it gets all users`() {
-        var p = PageRequest.of(0, 3)
-
         val users = listOf(User(
                 birthDate = LocalDate.now(),
                 email = "test@test.fr",
@@ -108,6 +100,7 @@ internal class UserControllerTest {
                 "  \"numberOfElements\" : 1,\n" +
                 "  \"empty\" : false\n" +
                 "}", result.response.contentAsString)
+
         verify { userService.getAll(any()) }
     }
 }
