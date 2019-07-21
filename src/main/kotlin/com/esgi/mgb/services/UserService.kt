@@ -2,8 +2,10 @@ package com.esgi.mgb.services
 
 import com.esgi.mgb.dao.BarDAO
 import com.esgi.mgb.dao.UserDAO
+import com.esgi.mgb.model.Bar
 import com.esgi.mgb.model.User
 import com.esgi.mgb.utils.BasicCrud
+import javassist.NotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -20,16 +22,10 @@ class UserService(private val userDAO: UserDAO, private val barDAO: BarDAO) : Ba
 
     @Throws(Exception::class)
     override fun update(obj: User): User {
-        return if (userDAO.existsById(obj.id)) { //check if user exists because the save method will insert a record if does not exists
-            userDAO.save(obj).apply {
-                //update user
-                obj.id.let {
-                    //if does has Id then
-                    barDAO.saveAll(barDAO.findByOwnerId(it).map { it.also { it.owner = this } })//update all his bars
-                }
-            }
+		return if (userDAO.existsById(obj.id)) {
+			userDAO.save(insertUserAndReInsertItBar(obj))
         } else {
-            throw object : Exception("The user does not exists") {}
+			throw object : NotFoundException("${User::class}: $obj not found") {}
         }
     }
 
@@ -40,4 +36,13 @@ class UserService(private val userDAO: UserDAO, private val barDAO: BarDAO) : Ba
             }
         }
     }
+
+	private fun insertUserAndReInsertItBar(user: User): User {
+		return userDAO.insert(user.apply {
+			(barDAO.findByListOwnerId(user.id).forEach {
+				if (this.listBar == null) this.listBar = mutableListOf()
+				this.listBar?.add(it)
+			})
+		})
+	}
 }

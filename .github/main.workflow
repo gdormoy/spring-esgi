@@ -2,10 +2,8 @@ workflow "Main workflow" {
   on = "push"
   resolves = [
     "Build Docker image",
-    "Delete old ECR image",
-    "Tag image for ECR",
     "Push image to ECR",
-    "AWS DEPLOY SERVICE",
+    "Delete old ECR image",
   ]
 }
 
@@ -35,15 +33,12 @@ action "Login to ECR" {
 
 action "Delete old ECR image" {
   uses = "actions/aws/cli@master"
-  needs = [
-    "Login to ECR",
-    "Build Docker image",
-  ]
+  needs = ["Login to ECR"]
   env = {
     AWS_REPOSITORY_NAME = "spring-esgi"
     VERSION = "latest"
   }
-  args = "ecr batch-delete-image --repository-name $AWS_REPOSITORY_NAME --image-ids imageTag=$VERSION | sh"
+  args = "ecr batch-delete-image --repository-name $AWS_DEFAULT_REGION --image-ids imageTag=$VERSION | sh"
 }
 
 action "Tag image for ECR" {
@@ -69,14 +64,3 @@ action "Push image to ECR" {
   args = ["push", "$CONTAINER_REGISTRY_PATH/$IMAGE_NAME:latest"]
 }
 
-action "AWS DEPLOY SERVICE" {
-  uses = "actions/aws/cli@master"
-  needs = ["Push image to ECR"]
-  env = {
-    AWS_CLUSTER_NAME = "spring-project"
-    AWS_REPOSITORY_URL = "264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi"
-    AWS_SERVICE_NAME = "spring-api"
-    VERSION = "latest"
-  }
-  args = "ecs update-service --force-new-deployment --cluster $AWS_CLUSTER_NAME --service $AWS_SERVICE_NAME"
-}
