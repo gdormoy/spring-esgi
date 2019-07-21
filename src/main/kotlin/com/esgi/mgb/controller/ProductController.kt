@@ -4,6 +4,7 @@ import com.esgi.mgb.model.Product
 import com.esgi.mgb.services.ProductService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -17,11 +18,15 @@ class ProductController(private val productService: ProductService) {
 	fun getById(@PathVariable id: String): Optional<Product> = productService.getById(id)
 
 	@PostMapping
-	fun insert(@RequestBody promotion: Product): Product = productService.insert(promotion)
+    @ResponseStatus(HttpStatus.CREATED)
+    fun insert(@RequestBody product: Product): Product = productService.insert(product)
 
 	@PutMapping
-	fun update(@RequestBody promotion: Product): Product = productService.update(promotion)
+	fun update(@RequestBody product: Product): Product = productService.update(product)
 
 	@DeleteMapping("{id}")
-	fun deleteById(@PathVariable id: String): Optional<Product> = productService.deleteById(id)
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	fun deleteById(@PathVariable id: String) {
+		productService.deleteById(id)
+	}
 }
