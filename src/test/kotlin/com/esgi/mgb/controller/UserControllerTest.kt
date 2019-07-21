@@ -13,14 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.data.domain.PageImpl
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import java.time.LocalDate
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(UserController::class)
@@ -63,7 +64,6 @@ internal class UserControllerTest {
         val pagedResponse = PageImpl(users)
 
         every { userService.getAll(any()) } returns pagedResponse
-        assertEquals(true, true)
 
         val result = mockMvc.perform(get("/user"))
                 .andExpect(status().isOk)
@@ -76,7 +76,7 @@ internal class UserControllerTest {
                 "    \"email\" : \"test@test.fr\",\n" +
                 "    \"passWord\" : \"test\",\n" +
                 "    \"userName\" : \"test\",\n" +
-                "    \"birthDate\" : \"2019-07-20\",\n" +
+                "    \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
                 "    \"id\" : \"\",\n" +
                 "    \"listBar\" : null,\n" +
                 "    \"roles\" : [ ],\n" +
@@ -102,5 +102,180 @@ internal class UserControllerTest {
                 "}", result.response.contentAsString)
 
         verify { userService.getAll(any()) }
+    }
+
+    @Test
+    fun `it gets by id`() {
+        val user = User(
+                id = "123",
+                birthDate = LocalDate.now(),
+                email = "test@test.fr",
+                firstname = "test",
+                lastname = "test",
+                passWord = "test",
+                userName = "test"
+        )
+
+        every { userService.getById("123") } returns Optional.of(user)
+
+        val result = mockMvc.perform(get("/user/123"))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        assertEquals("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}", result.response.contentAsString)
+
+        verify { userService.getById("123") }
+    }
+
+    @Test
+    fun `it inserts`() {
+        val user = User(
+                id = "123",
+                birthDate = LocalDate.now(),
+                email = "test@test.fr",
+                firstname = "test",
+                lastname = "test",
+                passWord = "test",
+                userName = "test"
+        )
+
+        every { userService.insert(any()) } returns user
+
+        val result = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON_UTF8).content("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}"))
+                .andExpect(status().isCreated)
+                .andReturn()
+
+        assertEquals("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}", result.response.contentAsString)
+
+        verify { userService.insert(any()) }
+    }
+
+    @Test
+    fun `it updates`() {
+        val user = User(
+                id = "123",
+                birthDate = LocalDate.now(),
+                email = "test@test.fr",
+                firstname = "test",
+                lastname = "test",
+                passWord = "test",
+                userName = "test"
+        )
+
+        every { userService.update(any()) } returns user
+
+        val result = mockMvc.perform(put("/user").contentType(MediaType.APPLICATION_JSON_UTF8).content("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}"))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        assertEquals("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}", result.response.contentAsString)
+
+        verify { userService.update(any()) }
+    }
+
+    @Test
+    fun `it deletes by id`() {
+        val user = User(
+                id = "123",
+                birthDate = LocalDate.now(),
+                email = "test@test.fr",
+                firstname = "test",
+                lastname = "test",
+                passWord = "test",
+                userName = "test"
+        )
+
+        every { userService.deleteById("123") } returns Optional.of(user)
+
+        val result = mockMvc.perform(delete("/user/123").contentType(MediaType.APPLICATION_JSON_UTF8).content("{\n" +
+                "  \"firstname\" : \"test\",\n" +
+                "  \"lastname\" : \"test\",\n" +
+                "  \"email\" : \"test@test.fr\",\n" +
+                "  \"passWord\" : \"test\",\n" +
+                "  \"userName\" : \"test\",\n" +
+                "  \"birthDate\" : \"" + LocalDate.now().toString() + "\",\n" +
+                "  \"id\" : \"123\",\n" +
+                "  \"listBar\" : null,\n" +
+                "  \"roles\" : [ ],\n" +
+                "  \"accountNonExpired\" : true,\n" +
+                "  \"accountNonLocked\" : true,\n" +
+                "  \"credentialsNonExpired\" : true,\n" +
+                "  \"enabled\" : true\n" +
+                "}"))
+                .andExpect(status().isAccepted)
+                .andReturn()
+
+        assertEquals("", result.response.contentAsString)
+        verify { userService.deleteById("123") }
     }
 }
