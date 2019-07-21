@@ -13,7 +13,12 @@ open class CustomUserDetails : User, UserDetails {
 
     private val log = LoggerFactory.getLogger(CustomUserDetails::class.java)
 
-    constructor(user: User) : super(user.firstname, user.lastname, user.email, user.passWord, user.userName, user.birthDate)
+	constructor(user: User) : super(user.firstname,
+			user.lastname,
+			user.email,
+			user.passWord,
+			user.userName,
+			user.birthDate)
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
         return roles
