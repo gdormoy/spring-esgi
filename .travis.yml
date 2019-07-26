@@ -16,8 +16,8 @@ before_script:
   - aws s3 cp s3://spring-esgi-project/application.properties ./src/main/resources/application.properties
 script:
   - eval $(aws ecr get-login --region eu-west-3 --no-include-email)
+  - mvn clean install -DskipTests
   - aws ecr batch-delete-image --repository-name spring-esgi --image-ids imageTag=latest
-  - mvn clean install
   - docker build -t spring-esgi:latest .
   - docker tag spring-esgi:latest 264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi:latest
   - docker push 264868257155.dkr.ecr.eu-west-3.amazonaws.com/spring-esgi:latest
